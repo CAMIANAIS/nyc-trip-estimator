@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, type Ref } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, X } from "lucide-react";
 import { searchAddress } from "@/lib/api";
@@ -14,15 +14,21 @@ interface Props {
   onFocus?: () => void;
   active?: boolean;
   disabled?: boolean;
+  /** External error, e.g. from the API */
+  error?: string | null | undefined;
+  inputRef?: Ref<HTMLInputElement> | undefined;
 }
 
-export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, active, disabled }: Props) {
+export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, active, disabled, error, inputRef }: Props) {
   const id = useId();
   const listId = `${id}-list`;
   const [text, setText] = useState(value?.address ?? "");
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
+  const [blurError, setBlurError] = useState<string | null>(null);
+  const shownError = error ?? blurError;
+  const errId = `${id}-err`;
 
   useEffect(() => setText(value?.address ?? ""), [value?.address]);
 
@@ -47,6 +53,7 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
     onSelect({ lat: r.lat, lon: r.lon, address: r.address });
     setText(r.address);
     setOpen(false);
+    setBlurError(null);
   };
 
   return (
@@ -56,6 +63,7 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
         className={cn(
           "flex h-11 items-center gap-2 rounded-md border bg-card px-3 shadow-sm transition-colors ease-ui",
           active && "border-primary bg-primary-soft",
+          shownError && "border-destructive bg-card",
         )}
       >
         <span
@@ -64,7 +72,10 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
         />
         <input
           id={id}
+          ref={inputRef}
           role="combobox"
+          aria-invalid={!!shownError}
+          aria-describedby={shownError ? errId : undefined}
           aria-expanded={showList}
           aria-controls={listId}
           aria-autocomplete="list"
@@ -76,7 +87,13 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
             setOpen(true);
             onFocus?.();
           }}
-          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          onBlur={(e) => {
+            const v = e.target.value.trim();
+            setTimeout(() => {
+              setOpen(false);
+              setBlurError(v && v !== value?.address ? "Select an address from the list or click the map" : null);
+            }, 150);
+          }}
           onChange={(e) => {
             setText(e.target.value);
             setOpen(true);
@@ -95,7 +112,7 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
         {text && !disabled && (
           <button
             type="button"
-            onClick={() => { setText(""); onClear(); }}
+            onClick={() => { setText(""); setBlurError(null); onClear(); }}
             className="grid size-6 place-items-center rounded-full text-muted-foreground hover:bg-muted"
             aria-label={`Clear ${kind}`}
           >
@@ -103,6 +120,9 @@ export function LocationInput({ kind, label, value, onSelect, onClear, onFocus, 
           </button>
         )}
       </div>
+      {shownError && (
+        <p id={errId} className="text-small font-medium text-destructive">{shownError}</p>
+      )}
       {showList && (
         <ul id={listId} role="listbox" className="absolute inset-x-0 top-full z-[1000] mt-1 max-h-64 overflow-auto rounded-lg border bg-popover p-1 shadow-lg">
           {results.length === 0 ? (
