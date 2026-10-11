@@ -46,6 +46,7 @@ export async function predict(
     throw new ApiError(
       body?.error?.code ?? "INTERNAL_ERROR",
       body?.error?.message ?? `The prediction service returned an error (${res.status}).`,
+      body?.error?.field,
     );
   }
   return res.json();

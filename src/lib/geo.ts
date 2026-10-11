@@ -63,5 +63,21 @@ export function formatTripTime(local: string): string {
   );
 }
 
+/** Rounded minutes; "1 h 12 min" above 60. */
+export function formatDuration(min: number): string {
+  const m = Math.round(min);
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60);
+  const r = m % 60;
+  return r ? `${h} h ${r} min` : `${h} h`;
+}
+
+/** Tomorrow at HH:mm, New York time, as "YYYY-MM-DDTHH:mm". */
+export function nyTomorrowAt(time: string): string {
+  const [y, mo, d] = nyNowRounded().slice(0, 10).split("-").map(Number) as number[];
+  const t = new Date(Date.UTC(y!, mo! - 1, d! + 1));
+  return `${t.toISOString().slice(0, 10)}T${time}`;
+}
+
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 export const formatUSD = (n: number) => usd.format(n);

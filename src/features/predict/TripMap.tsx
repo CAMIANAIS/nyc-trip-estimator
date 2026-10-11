@@ -13,11 +13,12 @@ export interface TripMapProps {
   /** [lat, lng] pairs */
   route: [number, number][] | null;
   clicksDisabled?: boolean;
+  invalid?: "pickup" | "dropoff" | null;
   onMapClick: (lat: number, lon: number) => void;
   onMarkerDrag: (kind: "pickup" | "dropoff", lat: number, lon: number) => void;
 }
 
-const icon = (kind: "pickup" | "dropoff") =>
+const icon = (kind: "pickup" | "dropoff" | "error") =>
   L.divIcon({
     className: "",
     html: `<span class="map-pin map-pin--${kind}"></span>`,
@@ -38,7 +39,11 @@ function FitBounds({ points }: { points: [number, number][] }) {
   const map = useMap();
   const key = points.map((p) => p.join(",")).join("|");
   useEffect(() => {
-    if (points.length >= 2) map.fitBounds(L.latLngBounds(points), { padding: [48, 48], maxZoom: 15 });
+    if (points.length < 2) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const bounds = L.latLngBounds(points);
+    if (reduce) map.fitBounds(bounds, { padding: [48, 48], maxZoom: 15 });
+    else map.flyToBounds(bounds, { padding: [48, 48], maxZoom: 15, duration: 0.8 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, map]);
   return null;
@@ -69,17 +74,19 @@ function Overlay() {
   );
 }
 
-export default function TripMap({ pickup, dropoff, route, clicksDisabled, onMapClick, onMarkerDrag }: TripMapProps) {
+export default function TripMap({ pickup, dropoff, route, clicksDisabled, invalid, onMapClick, onMarkerDrag }: TripMapProps) {
   const pickupIcon = useMemo(() => icon("pickup"), []);
   const dropoffIcon = useMemo(() => icon("dropoff"), []);
+  const errorIcon = useMemo(() => icon("error"), []);
   const straight: [number, number][] | null =
     pickup && dropoff ? [[pickup.lat, pickup.lon], [dropoff.lat, dropoff.lon]] : null;
 
   return (
     <MapContainer center={NYC_CENTER} zoom={NYC_ZOOM} className="size-full" zoomControl>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        subdomains="abcd"
       />
       <ClickHandler onClick={onMapClick} disabled={clicksDisabled} />
       {route ? (
@@ -93,7 +100,7 @@ export default function TripMap({ pickup, dropoff, route, clicksDisabled, onMapC
       {pickup && (
         <Marker
           position={[pickup.lat, pickup.lon]}
-          icon={pickupIcon}
+          icon={invalid === "pickup" ? errorIcon : pickupIcon}
           draggable={!clicksDisabled}
           title="Pickup"
           eventHandlers={{ dragend: (e) => { const ll = (e.target as L.Marker).getLatLng(); onMarkerDrag("pickup", ll.lat, ll.lng); } }}
@@ -102,7 +109,7 @@ export default function TripMap({ pickup, dropoff, route, clicksDisabled, onMapC
       {dropoff && (
         <Marker
           position={[dropoff.lat, dropoff.lon]}
-          icon={dropoffIcon}
+          icon={invalid === "dropoff" ? errorIcon : dropoffIcon}
           draggable={!clicksDisabled}
           title="Dropoff"
           eventHandlers={{ dragend: (e) => { const ll = (e.target as L.Marker).getLatLng(); onMarkerDrag("dropoff", ll.lat, ll.lng); } }}

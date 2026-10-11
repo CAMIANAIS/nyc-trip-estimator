@@ -5,9 +5,11 @@ export const NETWORK_ERROR_MESSAGE =
 
 export class ApiError extends Error {
   code: ApiErrorCode;
-  constructor(code: ApiErrorCode, message: string) {
+  field: "pickup" | "dropoff" | undefined;
+  constructor(code: ApiErrorCode, message: string, field?: "pickup" | "dropoff") {
     super(message);
     this.code = code;
+    this.field = field;
     this.name = "ApiError";
   }
 }

@@ -39,14 +39,16 @@ export async function mockHealth(): Promise<HealthResponse> {
 
 export async function mockPredict(req: PredictRequest, distanceMiles?: number | undefined): Promise<PredictResponse> {
   await sleep(800);
-  if (!inNYC(req.pickup)) throw new ApiError("OUT_OF_SERVICE_AREA", "Pickup location is outside NYC taxi zones.");
-  if (!inNYC(req.dropoff)) throw new ApiError("OUT_OF_SERVICE_AREA", "Dropoff location is outside NYC taxi zones.");
+  if (!inNYC(req.pickup)) throw new ApiError("OUT_OF_SERVICE_AREA", "Pickup location is outside NYC taxi zones.", "pickup");
+  if (!inNYC(req.dropoff)) throw new ApiError("OUT_OF_SERVICE_AREA", "Dropoff location is outside NYC taxi zones.", "dropoff");
 
   const miles = round2(distanceMiles ?? haversineMiles(req.pickup, req.dropoff) * 1.3);
   const fare = round2(3 + 2.5 * miles);
   const pz = nearestZone(req.pickup);
   const dz = nearestZone(req.dropoff);
-  const charges = [{ label: "MTA tax", amount: 0.5 }, { label: "Improvement surcharge", amount: 1.0 }];
+  const charges = [{ label: "MTA tax", amount: 0.5, description: "NY State Metropolitan Commuter Transportation tax." } as { label: string; amount: number; description?: string },
+    { label: "Improvement surcharge", amount: 1.0 },
+  ];
   if (pz.borough === "Manhattan" || dz.borough === "Manhattan")
     charges.push({ label: "Congestion surcharge", amount: 2.5 });
   if ([132, 138].includes(pz.location_id)) charges.push({ label: "Airport fee", amount: 1.75 });

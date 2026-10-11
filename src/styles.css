@@ -190,6 +190,10 @@
   background: var(--dropoff);
   outline: 2px solid var(--taxi-yellow);
 }
+.map-pin--error {
+  background: var(--error);
+  outline: 2px solid var(--ink);
+}
 .leaflet-container {
   font-family: var(--font-sans);
   background: var(--surface-alt);
