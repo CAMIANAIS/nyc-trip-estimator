@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- API types live in src/types/api.ts, all network calls in src/lib/api.ts, mock data in src/lib/mock.ts — keeps the backend contract in one place.
+- The Leaflet map is lazy-loaded behind ClientOnly — Leaflet touches window at import and breaks SSR.

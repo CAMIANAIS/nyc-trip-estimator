@@ -1,29 +1,27 @@
-# Welcome to your Lovable project
+# NYC Taxi Fare & Duration Predictor — Frontend
 
-This project was built with [Lovable](https://lovable.dev).
+Pick a pickup and dropoff in New York City and get a predicted taxi fare and trip duration from our ML models (FastAPI backend). Works offline in mock mode for demos.
 
-## Build with Lovable
-
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+## Run locally
+```bash
+npm install
+cp .env.example .env   # adjust if needed
 npm run dev
 ```
 
-## Built with
+## Environment variables
+| Variable | Default | Description |
+|---|---|---|
+| `VITE_API_URL` | `http://localhost:8000` | FastAPI base URL (`/health`, `/predict`) |
+| `VITE_USE_MOCK` | `true` | When the API is unreachable, return realistic mock predictions |
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Docker
+```bash
+docker build --build-arg VITE_API_URL=https://api.example.com -t nyc-taxi-web .
+docker run -p 8080:80 nyc-taxi-web
+```
+
+## Structure
+- `src/types/api.ts` — API types · `src/lib/api.ts` — all API calls · `src/lib/mock.ts` — mock data
+- `src/components` — reusable UI · `src/features/predict` — map & results · `src/pages` — pages
+- Map data © OpenStreetMap contributors; geocoding by Nominatim; routing by OSRM.
