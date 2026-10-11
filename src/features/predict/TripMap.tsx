@@ -7,6 +7,9 @@ import { MapLegend } from "@/components/FormControls";
 import { NYC_CENTER, NYC_ZOOM } from "@/lib/geo";
 import type { Place } from "@/types/api";
 
+// CARTO Positron now needs a key; set VITE_MAP_TILE_URL to use it. Otherwise OSM tiles are softened to a light gray look.
+const TILE_URL = (import.meta.env["VITE_MAP_TILE_URL"] as string | undefined) || undefined;
+
 export interface TripMapProps {
   pickup: Place | null;
   dropoff: Place | null;
@@ -84,9 +87,9 @@ export default function TripMap({ pickup, dropoff, route, clicksDisabled, invali
   return (
     <MapContainer center={NYC_CENTER} zoom={NYC_ZOOM} className="size-full" zoomControl>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        subdomains="abcd"
+        attribution={TILE_URL ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+        url={TILE_URL ?? "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+        className={TILE_URL ? "" : "tiles-light"}
       />
       <ClickHandler onClick={onMapClick} disabled={clicksDisabled} />
       {route ? (

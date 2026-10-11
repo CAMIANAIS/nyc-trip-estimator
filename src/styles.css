@@ -194,6 +194,9 @@
   background: var(--error);
   outline: 2px solid var(--ink);
 }
+.tiles-light {
+  filter: grayscale(1) brightness(1.08) contrast(0.82);
+}
 .leaflet-container {
   font-family: var(--font-sans);
   background: var(--surface-alt);
