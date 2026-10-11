@@ -1,24 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PredictPage } from "@/pages/PredictPage";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "NYC Taxi Fare & Duration Predictor" },
+      { name: "description", content: "Pick a pickup and dropoff in New York City and get an ML-predicted taxi fare and trip time." },
+      { property: "og:title", content: "NYC Taxi Fare & Duration Predictor" },
+      { property: "og:description", content: "ML-predicted NYC yellow taxi fares and trip durations on an interactive map." },
+    ],
+  }),
+  component: PredictPage,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
