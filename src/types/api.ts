@@ -20,6 +20,8 @@ export interface Zone {
 export interface Charge {
   label: string;
   amount: number;
+  /** Optional explanation shown in an info tooltip */
+  description?: string;
 }
 
 export interface LineStringGeometry {
@@ -50,7 +52,7 @@ export type ApiErrorCode =
   | "NETWORK_ERROR";
 
 export interface ApiErrorBody {
-  error: { code: ApiErrorCode; message: string };
+  error: { code: ApiErrorCode; message: string; field?: "pickup" | "dropoff" };
 }
 
 export interface HealthResponse {

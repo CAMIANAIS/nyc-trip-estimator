@@ -155,8 +155,9 @@
   letter-spacing: 0.06em;
 }
 @utility text-stat {
-  font-size: 36px;
-  line-height: 40px;
+  font-size: 30px;
+  line-height: 36px;
+  white-space: nowrap;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
@@ -189,6 +190,13 @@
 .map-pin--dropoff {
   background: var(--dropoff);
   outline: 2px solid var(--taxi-yellow);
+}
+.map-pin--error {
+  background: var(--error);
+  outline: 2px solid var(--ink);
+}
+.tiles-light {
+  filter: grayscale(1) brightness(1.08) contrast(0.82);
 }
 .leaflet-container {
   font-family: var(--font-sans);

@@ -40,6 +40,11 @@ export function Header() {
           )}
         </div>
       </div>
+      {health.isError && (
+        <div role="status" className="border-t bg-muted px-4 py-1.5 text-center text-small text-muted-foreground">
+          Prediction service is offline — showing demo data.
+        </div>
+      )}
     </header>
   );
 }
