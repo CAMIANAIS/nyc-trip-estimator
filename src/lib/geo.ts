@@ -49,7 +49,8 @@ export function nyNowRounded(): string {
 export function formatTripTime(local: string): string {
   const m = local.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!m) return local;
-  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]));
+  const [, y, mo, da, h, mi] = m.map(Number) as number[];
+  const d = new Date(Date.UTC(y!, mo! - 1, da!, h!, mi!));
   return (
     new Intl.DateTimeFormat("en-US", {
       timeZone: "UTC",

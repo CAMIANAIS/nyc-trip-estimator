@@ -23,7 +23,7 @@ export async function getHealth(): Promise<HealthResponse> {
 
 export async function predict(
   req: PredictRequest,
-  opts: { mock: boolean; distanceMiles?: number },
+  opts: { mock: boolean; distanceMiles?: number | undefined },
 ): Promise<PredictResponse> {
   if (opts.mock) return mockPredict(req, opts.distanceMiles);
   let res: Response;
@@ -75,7 +75,7 @@ interface NominatimItem {
 export async function searchAddress(q: string, signal?: AbortSignal): Promise<GeocodeResult[]> {
   await throttle();
   const url = `${NOMINATIM}/search?format=jsonv2&limit=6&${NYC_PARAMS}&q=${encodeURIComponent(q)}`;
-  const res = await fetch(url, { signal, headers: { "Accept-Language": "en" } });
+  const res = await fetch(url, { signal: signal ?? null, headers: { "Accept-Language": "en" } });
   if (!res.ok) throw new Error("Address search failed");
   const items: NominatimItem[] = await res.json();
   return items.map((i) => ({

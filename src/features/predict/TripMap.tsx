@@ -25,7 +25,7 @@ const icon = (kind: "pickup" | "dropoff") =>
     iconAnchor: [11, 11],
   });
 
-function ClickHandler({ onClick, disabled }: { onClick: TripMapProps["onMapClick"]; disabled?: boolean }) {
+function ClickHandler({ onClick, disabled }: { onClick: TripMapProps["onMapClick"]; disabled?: boolean | undefined }) {
   useMapEvents({
     click(e) {
       if (!disabled) onClick(e.latlng.lat, e.latlng.lng);

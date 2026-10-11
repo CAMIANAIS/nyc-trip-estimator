@@ -18,7 +18,7 @@ const ZONES: (Zone & LatLon)[] = [
 ];
 
 function nearestZone(p: LatLon): Zone {
-  let best = ZONES[0];
+  let best = ZONES[0]!;
   let bestD = Infinity;
   for (const z of ZONES) {
     const d = haversineMiles(p, z);
@@ -37,7 +37,7 @@ export async function mockHealth(): Promise<HealthResponse> {
   return { status: "ok", models_loaded: true };
 }
 
-export async function mockPredict(req: PredictRequest, distanceMiles?: number): Promise<PredictResponse> {
+export async function mockPredict(req: PredictRequest, distanceMiles?: number | undefined): Promise<PredictResponse> {
   await sleep(800);
   if (!inNYC(req.pickup)) throw new ApiError("OUT_OF_SERVICE_AREA", "Pickup location is outside NYC taxi zones.");
   if (!inNYC(req.dropoff)) throw new ApiError("OUT_OF_SERVICE_AREA", "Dropoff location is outside NYC taxi zones.");
