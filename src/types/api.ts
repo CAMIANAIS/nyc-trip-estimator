@@ -9,6 +9,8 @@ export interface PredictRequest {
   /** New York local time, ISO without offset, e.g. 2026-10-10T18:30:00 */
   pickup_datetime: string;
   passenger_count: number;
+  /** Route distance from OSRM, in miles. Omitted if the route couldn't be calculated. */
+  trip_distance_miles?: number;
 }
 
 export interface Zone {

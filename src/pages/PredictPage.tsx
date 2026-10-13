@@ -113,6 +113,7 @@ export function PredictPage() {
       dropoff: { lat: v.dropoff!.lat, lon: v.dropoff!.lon },
       pickup_datetime: `${v.datetime.slice(0, 16)}:00`,
       passenger_count: v.passengers,
+      ...(route.data ? { trip_distance_miles: Math.round(route.data.distanceMiles * 100) / 100 } : {}),
     };
     lastRequest.current = req;
     prediction.mutate(req);
@@ -255,7 +256,7 @@ export function PredictPage() {
 
           <div className="sticky bottom-0 z-10 -mx-4 border-t bg-card/95 px-4 py-3 backdrop-blur lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:p-0">
             <Button type="submit" size="lg" className="w-full" disabled={!valid} loading={loading}>
-              {loading ? "Predicting…" : "Predict fare"}
+              {loading ? "Requesting…" : "Request"}
             </Button>
           </div>
 
