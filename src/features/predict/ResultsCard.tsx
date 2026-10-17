@@ -28,7 +28,7 @@ export function ResultsCard({ result, onReset }: { result: PredictResponse; onRe
         <FareBreakdown fare={result.fare_amount} charges={result.charges} total={result.total_amount} />
       </div>
       <p className="mt-4 text-small text-muted-foreground">
-        Tip not included. Estimate from model {result.model_version}; actual fare may vary.
+        Tip not included. Final fare may vary depending on applicable charges.
       </p>
       <Button variant="secondary" className="mt-5 w-full" onClick={onReset}>
         <RotateCcw /> New trip
