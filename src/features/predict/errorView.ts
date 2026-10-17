@@ -11,12 +11,13 @@ export interface ErrorView {
 export function errorView(err: Error): ErrorView {
   const code = err instanceof ApiError ? err.code : "INTERNAL_ERROR";
   const field = err instanceof ApiError ? err.field : undefined;
+  const message = err.message;
   const retry = { action: "retry" as const, actionLabel: "Try again" };
   switch (code) {
     case "VALIDATION_ERROR":
-      return { title: "Check your trip details", body: err.message, action: "focus-field", actionLabel: "Review details", field };
+      return { title: "Check your trip details", body: message, action: "focus-field", actionLabel: "Review details", field };
     case "OUT_OF_SERVICE_AREA":
-      return { title: "Location outside NYC", body: err.message, action: "change-location", actionLabel: "Change location", field };
+      return { title: "Location outside NYC", body: message, action: "change-location", actionLabel: "Change location", field };
     case "ROUTE_NOT_FOUND":
       return { title: "We couldn't find a route", body: "Try moving the pickup or dropoff closer to a street.", action: "change-location", actionLabel: "Change location", field };
     case "ROUTING_SERVICE_UNAVAILABLE":
@@ -26,6 +27,7 @@ export function errorView(err: Error): ErrorView {
     case "NETWORK_ERROR":
       return { title: "Can't reach the service", body: "Check your connection and try again.", ...retry };
     default:
-      return { title: "Something went wrong", body: "We couldn't get your estimate.", ...retry };
+      // For unknown errors, show the API message if available
+      return { title: "Something went wrong", body: message || "We couldn't get your estimate.", ...retry };
   }
 }
