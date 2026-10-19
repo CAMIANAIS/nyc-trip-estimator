@@ -17,7 +17,13 @@ export function errorView(err: Error): ErrorView {
     case "VALIDATION_ERROR":
       return { title: "Check your trip details", body: message, action: "focus-field", actionLabel: "Review details", field };
     case "OUT_OF_SERVICE_AREA":
-      return { title: "Location outside NYC", body: message, action: "change-location", actionLabel: "Change location", field };
+      return {
+        title: "Location outside service area",
+        body: message || "Estimates are currently available only for trips within Manhattan, JFK and LaGuardia airports.",
+        action: "change-location",
+        actionLabel: "Change location",
+        field,
+      };
     case "ROUTE_NOT_FOUND":
       return { title: "We couldn't find a route", body: "Try moving the pickup or dropoff closer to a street.", action: "change-location", actionLabel: "Change location", field };
     case "ROUTING_SERVICE_UNAVAILABLE":

@@ -38,16 +38,19 @@ export async function predict(
   }
   if (!res.ok) {
     let body: Partial<ApiErrorBody> | null = null;
+    let rawBody: any = null;
     try {
-      body = await res.json();
+      rawBody = await res.json();
+      console.error("API error response:", rawBody);
+      body = rawBody;
     } catch {
       /* non-JSON error */
     }
-    throw new ApiError(
-      body?.error?.code ?? "INTERNAL_ERROR",
-      body?.error?.message ?? `The prediction service returned an error (${res.status}).`,
-      body?.error?.field,
-    );
+    // Try to extract error message from various possible response structures
+    const errorMessage = body?.error?.message ?? rawBody?.detail ?? rawBody?.message ?? `The prediction service returned an error (${res.status}).`;
+    const errorCode = body?.error?.code ?? "INTERNAL_ERROR";
+    const errorField = body?.error?.field;
+    throw new ApiError(errorCode, errorMessage, errorField);
   }
   return res.json();
 }
