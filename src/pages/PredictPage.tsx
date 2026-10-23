@@ -31,24 +31,24 @@ type Kind = "pickup" | "dropoff";
 
 const EXAMPLES = [
   {
-    pickup: { lat: 40.758, lon: -73.9855, address: "Times Square, Manhattan" },
-    dropoff: { lat: 40.6413, lon: -73.7781, address: "JFK Airport, Queens" },
+    pickup: { lat: 40.7575, lon: -73.9858, address: "Times Square, Manhattan" },
+    dropoff: { lat: 40.6399, lon: -73.7787, address: "JFK Airport, Queens" },
   },
   {
     pickup: { lat: 40.7484, lon: -73.9857, address: "Empire State Building, Manhattan" },
-    dropoff: { lat: 40.7614, lon: -73.9776, address: "Central Park South, Manhattan" },
+    dropoff: { lat: 40.7643, lon: -73.9730, address: "Central Park South, Manhattan" },
   },
   {
     pickup: { lat: 40.7527, lon: -73.9772, address: "Grand Central Terminal, Manhattan" },
-    dropoff: { lat: 40.7282, lon: -74.0776, address: "Statue of Liberty, Manhattan" },
+    dropoff: { lat: 40.6892, lon: -74.0445, address: "Statue of Liberty, Manhattan" },
   },
   {
-    pickup: { lat: 40.7128, lon: -74.0060, address: "World Trade Center, Manhattan" },
-    dropoff: { lat: 40.7831, lon: -73.9712, address: "Columbia University, Manhattan" },
+    pickup: { lat: 40.7117, lon: -74.0125, address: "World Trade Center, Manhattan" },
+    dropoff: { lat: 40.8074, lon: -73.9630, address: "Columbia University, Manhattan" },
   },
   {
-    pickup: { lat: 40.7589, lon: -73.9851, address: "Broadway Theater District, Manhattan" },
-    dropoff: { lat: 40.6892, lon: -74.0445, address: "Brooklyn Bridge, Manhattan" },
+    pickup: { lat: 40.7590, lon: -73.9850, address: "Broadway Theater District, Manhattan" },
+    dropoff: { lat: 40.7060, lon: -73.9970, address: "Brooklyn Bridge, Manhattan" },
   },
 ];
 
