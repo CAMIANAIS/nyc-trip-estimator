@@ -29,10 +29,30 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 type Kind = "pickup" | "dropoff";
 
-const EXAMPLE = {
-  pickup: { lat: 40.758, lon: -73.9855, address: "Times Square, Manhattan" },
-  dropoff: { lat: 40.6413, lon: -73.7781, address: "JFK Airport, Queens" },
-};
+const EXAMPLES = [
+  {
+    pickup: { lat: 40.7575, lon: -73.9858, address: "Times Square, Manhattan" },
+    dropoff: { lat: 40.6399, lon: -73.7787, address: "JFK Airport, Queens" },
+  },
+  {
+    pickup: { lat: 40.7484, lon: -73.9857, address: "Empire State Building, Manhattan" },
+    dropoff: { lat: 40.7643, lon: -73.9730, address: "Central Park South, Manhattan" },
+  },
+  {
+    pickup: { lat: 40.7527, lon: -73.9772, address: "Grand Central Terminal, Manhattan" },
+    dropoff: { lat: 40.6892, lon: -74.0445, address: "Statue of Liberty, Manhattan" },
+  },
+  {
+    pickup: { lat: 40.7117, lon: -74.0125, address: "World Trade Center, Manhattan" },
+    dropoff: { lat: 40.8074, lon: -73.9630, address: "Columbia University, Manhattan" },
+  },
+  {
+    pickup: { lat: 40.7590, lon: -73.9850, address: "Broadway Theater District, Manhattan" },
+    dropoff: { lat: 40.7060, lon: -73.9970, address: "Brooklyn Bridge, Manhattan" },
+  },
+];
+
+const getRandomExample = () => EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
 
 const MapFallback = () => <div className="size-full animate-pulse bg-muted" />;
 
@@ -127,7 +147,8 @@ export function PredictPage() {
   };
 
   const tryExample = () => {
-    form.reset({ ...EXAMPLE, datetime: nyTomorrowAt("18:30"), passengers: 1 });
+    const example = getRandomExample();
+    form.reset({ ...example, datetime: nyTomorrowAt("18:30"), passengers: 1 });
     prediction.reset();
     setActiveField("dropoff");
   };
@@ -203,7 +224,7 @@ export function PredictPage() {
                 disabled={loading}
                 className="inline-flex items-center gap-1 font-semibold text-foreground underline decoration-primary decoration-2 underline-offset-4"
               >
-                <Sparkles className="size-3.5" aria-hidden /> Try an example
+                <Sparkles className="size-3.5" aria-hidden /> Try a random example
               </button>
             </p>
           </div>
